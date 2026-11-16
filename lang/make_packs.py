@@ -1,0 +1,74 @@
+# Arachne: writes the language packs (lang/<code>.txt) from this table. English is the key; a pack leaves out what
+# it doesn't have (that stays English: the longer tooltips, for now). Edit the table, run: python make_packs.py
+import os
+
+CODES = ['ja', 'zh', 'es', 'ko', 'fr', 'de', 'ru', 'sr', 'af', 'yua', 'pdc']
+T = {
+'File': ['ファイル', '文件', 'Archivo', '파일', 'Fichier', 'Datei', 'Файл', 'Датотека', 'Lêer', "Ju'un", 'Feil'],
+'View': ['表示', '视图', 'Ver', '보기', 'Affichage', 'Ansicht', 'Вид', 'Приказ', 'Aansig', 'Il', 'Aasicht'],
+'Language': ['言語', '语言', 'Idioma', '언어', 'Langue', 'Sprache', 'Язык', 'Језик', 'Taal', "T'aan", 'Schprooch'],
+'Help': ['ヘルプ', '帮助', 'Ayuda', '도움말', 'Aide', 'Hilfe', 'Справка', 'Помоћ', 'Hulp', "Áantaj", 'Hilf'],
+'Quit': ['終了', '退出', 'Salir', '종료', 'Quitter', 'Beenden', 'Выход', 'Излаз', 'Verlaat', "Xu'ulsik", 'Uffheere'],
+'Stop': ['停止', '停止', 'Detener', '중지', 'Arrêter', 'Stopp', 'Стоп', 'Заустави', 'Stop', "Xu'ulsik", 'Halt'],
+'Before': ['前', '之前', 'Antes', '전', 'Avant', 'Vorher', 'До', 'Пре', 'Voor', 'Táanil', 'Vorher'],
+'After': ['後', '之后', 'Después', '후', 'Après', 'Nachher', 'После', 'После', 'Na', 'Paachil', 'Nochher'],
+'Before | After': ['前 | 後', '之前 | 之后', 'Antes | Después', '전 | 후', 'Avant | Après', 'Vorher | Nachher', 'До | После', 'Пре | После', 'Voor | Na', 'Táanil | Paachil', 'Vorher | Nochher'],
+'The colours': ['色', '颜色', 'Los colores', '색상', 'Les couleurs', 'Die Farben', 'Цвета', 'Боје', 'Die kleure', "Le boono'ob", 'Die Farewe'],
+'Ready': ['準備完了', '就绪', 'Listo', '준비됨', 'Prêt', 'Bereit', 'Готово', 'Спремно', 'Gereed', "Líista", 'Faddich'],
+'Ready to trace. ': ['トレースの準備完了。', '可以描摹。', 'Listo para vectorizar. ', '트레이스 준비됨. ', 'Prêt à vectoriser. ', 'Bereit zum Vektorisieren. ', 'Готово к трассировке. ', 'Спремно за векторизацију. ', 'Gereed om na te trek. ', "Líista u ts'íibta'al. ", 'Faddich fer abzumole. '],
+'Saved ': ['保存しました: ', '已保存: ', 'Guardado: ', '저장됨: ', 'Enregistré : ', 'Gespeichert: ', 'Сохранено: ', 'Сачувано: ', 'Gestoor: ', "Líik'sa'ab: ", 'Gschpeichert: '],
+'Tracing...': ['トレース中...', '描摹中...', 'Vectorizando...', '트레이스 중...', 'Vectorisation...', 'Wird vektorisiert...', 'Трассировка...', 'Векторизација...', 'Trek na...', "Ku ts'íibta'al...", 'Am Abmole...'],
+'Painting...': ['描画中...', '绘制中...', 'Pintando...', '그리는 중...', 'Peinture...', 'Wird gemalt...', 'Рисование...', 'Сликање...', 'Verf...', "Ku bo'onta'al...", 'Am Mole...'],
+'Painted: tracing...': ['描画完了: トレース中...', '已绘制:描摹中...', 'Pintado: vectorizando...', '그림 완성: 트레이스 중...', 'Peint : vectorisation...', 'Gemalt: wird vektorisiert...', 'Нарисовано: трассировка...', 'Насликано: векторизација...', 'Geverf: trek na...', "Bo'onta'ab: ku ts'íibta'al...", 'Gmolt: am Abmole...'],
+'Spinning the web...': ['巣を紡いでいます...', '正在织网...', 'Tejiendo la telaraña...', '거미줄을 짜는 중...', 'Tissage de la toile...', 'Das Netz wird gesponnen...', 'Плетём паутину...', 'Плетемо мрежу...', 'Spin die web...', "Ku jo'osa'al u yaal ku'uk...", 'Es Netz watt gschpunne...'],
+'Open recent': ['最近使ったものを開く', '打开最近', 'Abrir reciente', '최근 항목 열기', 'Ouvrir un récent', 'Zuletzt geöffnet', 'Открыть недавнее', 'Отвори скорашње', 'Maak onlangse oop', "Je'ik le ts'ook u je'ebelo'", 'Letscht uffmache'],
+'Preferences': ['環境設定', '偏好设置', 'Preferencias', '환경설정', 'Préférences', 'Einstellungen', 'Настройки', 'Подешавања', 'Voorkeure', "Ba'ax a k'áat", 'Eischtellinge'],
+'Preferences...': ['環境設定...', '偏好设置...', 'Preferencias...', '환경설정...', 'Préférences...', 'Einstellungen...', 'Настройки...', 'Подешавања...', 'Voorkeure...', "Ba'ax a k'áat...", 'Eischtellinge...'],
+'About Arachne': ['Arachne について', '关于 Arachne', 'Acerca de Arachne', 'Arachne 정보', 'À propos d\'Arachne', 'Über Arachne', 'Об Arachne', 'О програму Arachne', 'Oor Arachne', "Yo'olal Arachne", 'Iwwer Arachne'],
+'Open a picture...': ['画像を開く...', '打开图片...', 'Abrir una imagen...', '사진 열기...', 'Ouvrir une image...', 'Bild öffnen...', 'Открыть изображение...', 'Отвори слику...', "Maak 'n prent oop...", "Je'ik juntúul oochel...", 'Bild uffmache...'],
+'or paint one from words:': ['または言葉から描く:', '或用文字绘制一张:', 'o píntala con palabras:', '또는 글로 그리기:', 'ou peignez-en une avec des mots :', 'oder mit Worten malen:', 'или нарисуйте по словам:', 'или је насликајте речима:', "of verf een met woorde:", "wa bo'ont juntúul yéetel t'aan:", 'odder mol eens mit Wadde:'],
+'Paint the picture': ['画像を描く', '绘制图片', 'Pintar la imagen', '그림 그리기', "Peindre l'image", 'Bild malen', 'Нарисовать', 'Наслікај слику', 'Verf die prent', "Bo'ont le oochelo'", 'Es Bild mole'],
+'Same seed every time': ['毎回同じシード', '每次使用相同种子', 'La misma semilla siempre', '항상 같은 시드', 'Toujours la même graine', 'Immer derselbe Seed', 'Всегда одно зерно', 'Увек исто семе', 'Elke keer dieselfde saad', "Le ju'unp'éel iinaj sáamsamal", 'Alleweil der seem Some'],
+'Picture': ['画像', '图片', 'Imagen', '사진', 'Image', 'Bild', 'Изображение', 'Слика', 'Prent', 'Oochel', 'Bild'],
+'Size': ['サイズ', '尺寸', 'Tamaño', '크기', 'Taille', 'Größe', 'Размер', 'Величина', 'Grootte', "U nojochil", 'Grees'],
+'Steps': ['ステップ', '步数', 'Pasos', '단계', 'Étapes', 'Schritte', 'Шаги', 'Кораци', 'Stappe', "Xíimbal", 'Schritt'],
+'Tracing': ['トレース', '描摹', 'Vectorización', '트레이스', 'Vectorisation', 'Vektorisieren', 'Трассировка', 'Векторизација', 'Natrek', "Ts'íibtik", 'Abmole'],
+'Colours': ['色数', '颜色数', 'Colores', '색상 수', 'Couleurs', 'Farben', 'Цвета', 'Боје', 'Kleure', "Boono'ob", 'Farewe'],
+'Speckle': ['斑点', '斑点', 'Motas', '얼룩', 'Taches', 'Sprenkel', 'Крапинки', 'Мрље', 'Spikkels', "Chan ch'ik", 'Schprenkel'],
+'Smooth the picture first': ['先に画像を滑らかに', '先平滑图片', 'Suavizar la imagen antes', '먼저 사진 부드럽게', "Lisser l'image d'abord", 'Bild zuerst glätten', 'Сначала сгладить', 'Прво изглади слику', 'Maak die prent eers glad', "Ts'ook u jats'utskúunta'al le oochelo'", 'Es Bild zerscht glatt mache'],
+'Straighten': ['直線化', '拉直', 'Enderezar', '직선화', 'Redresser', 'Begradigen', 'Выпрямить', 'Исправи', 'Reguit maak', "Toj", 'Graad mache'],
+'Corners': ['角', '角', 'Esquinas', '모서리', 'Coins', 'Ecken', 'Углы', 'Углови', 'Hoeke', "Xúuk'", 'Ecke'],
+'Curve fit': ['曲線の精度', '曲线拟合', 'Ajuste de curvas', '곡선 맞춤', 'Ajustement des courbes', 'Kurvenanpassung', 'Подгонка кривых', 'Прилагођавање кривих', 'Kurwepassing', "U ch'éen le kóochilo'", 'Kurve-Aabasse'],
+'Detail': ['詳細', '细节', 'Detalle', '디테일', 'Détail', 'Detail', 'Детализация', 'Детаљ', 'Detail', "Chan ba'al", 'Detail'],
+'Leave out the background': ['背景を除く', '去掉背景', 'Quitar el fondo', '배경 빼기', "Retirer l'arrière-plan", 'Hintergrund weglassen', 'Без фона', 'Изостави позадину', 'Laat die agtergrond uit', "Ma' u ts'áa'al le paach'o'", 'Der Hinnergrund weglosse'],
+'Outlines only': ['輪郭のみ', '仅轮廓', 'Solo contornos', '윤곽선만', 'Contours seulement', 'Nur Umrisse', 'Только контуры', 'Само обриси', 'Net buitelyne', "Chéen u xúul", 'Yuscht Umrisse'],
+'Line width': ['線の太さ', '线宽', 'Grosor de línea', '선 굵기', 'Épaisseur du trait', 'Linienbreite', 'Толщина линии', 'Дебљина линије', 'Lyndikte', "U polil u xóot'", 'Linnebreet'],
+'Save': ['保存', '保存', 'Guardar', '저장', 'Enregistrer', 'Speichern', 'Сохранить', 'Сачувај', 'Stoor', "Líik'es", 'Schpeichere'],
+'Save the SVG...': ['SVG を保存...', '保存 SVG...', 'Guardar el SVG...', 'SVG 저장...', 'Enregistrer le SVG...', 'SVG speichern...', 'Сохранить SVG...', 'Сачувај SVG...', 'Stoor die SVG...', "Líik'es le SVG...", 'Es SVG schpeichere...'],
+'Save a PNG...': ['PNG を保存...', '保存 PNG...', 'Guardar un PNG...', 'PNG 저장...', 'Enregistrer un PNG...', 'PNG speichern...', 'Сохранить PNG...', 'Сачувај PNG...', "Stoor 'n PNG...", "Líik'es juntúul PNG...", 'En PNG schpeichere...'],
+'PNG size': ['PNG のサイズ', 'PNG 尺寸', 'Tamaño del PNG', 'PNG 크기', 'Taille du PNG', 'PNG-Größe', 'Размер PNG', 'Величина PNG-а', 'PNG-grootte', "U nojochil le PNG", 'PNG-Grees'],
+'Copy the SVG': ['SVG をコピー', '复制 SVG', 'Copiar el SVG', 'SVG 복사', 'Copier le SVG', 'SVG kopieren', 'Копировать SVG', 'Копирај SVG', 'Kopieer die SVG', "Ka'a ts'íibt le SVG", 'Es SVG kopiere'],
+'The SVG is on the clipboard': ['SVG をクリップボードにコピーしました', 'SVG 已复制到剪贴板', 'El SVG está en el portapapeles', 'SVG를 클립보드에 복사했습니다', 'Le SVG est dans le presse-papiers', 'Das SVG ist in der Zwischenablage', 'SVG скопирован в буфер обмена', 'SVG је у оставу', 'Die SVG is op die knipbord', "Le SVG yaan ti' le ts'aak'o'", 'Es SVG is im Zwischeschpeicher'],
+"The SVG couldn't be drawn": ['SVG を描画できませんでした', '无法绘制 SVG', 'No se pudo dibujar el SVG', 'SVG를 그릴 수 없습니다', "Le SVG n'a pas pu être dessiné", 'Das SVG ließ sich nicht zeichnen', 'Не удалось отрисовать SVG', 'SVG није могао да се нацрта', 'Die SVG kon nie geteken word nie', "Ma' páatchaj u ts'íibta'al le SVG", 'Es SVG hot net gezeichnet werre kenne'],
+"That picture couldn't be read": ['その画像は読み込めませんでした', '无法读取该图片', 'No se pudo leer esa imagen', '그 사진을 읽을 수 없습니다', "Cette image n'a pas pu être lue", 'Dieses Bild ließ sich nicht lesen', 'Не удалось прочитать изображение', 'Та слика није могла да се прочита', 'Daardie prent kon nie gelees word nie', "Ma' páatchaj u xo'okol le oochelo'", 'Sell Bild hot net glese werre kenne'],
+'Describe the picture first': ['まず画像を説明してください', '请先描述图片', 'Describe primero la imagen', '먼저 그림을 설명하세요', "Décrivez d'abord l'image", 'Beschreibe zuerst das Bild', 'Сначала опишите изображение', 'Прво опишите слику', 'Beskryf eers die prent', "Ts'íibt táanil ba'ax le oochelo'", 'Beschreib zerscht es Bild'],
+'Open the last picture at the start': ['起動時に前回の画像を開く', '启动时打开上次的图片', 'Abrir la última imagen al iniciar', '시작할 때 마지막 사진 열기', "Ouvrir la dernière image au démarrage", 'Beim Start das letzte Bild öffnen', 'Открывать последнее изображение при запуске', 'Отвори последњу слику при покретању', 'Maak die laaste prent oop met die begin', "Je'ik le ts'ook oochel ken u káajal", 'Beim Aafange es letscht Bild uffmache'],
+"Restart Arachne for this language's letters": ['この言語の文字を表示するには Arachne を再起動してください', '重新启动 Arachne 以显示该语言的文字', 'Reinicia Arachne para las letras de este idioma', '이 언어의 글자를 보려면 Arachne를 다시 시작하세요', 'Redémarrez Arachne pour les lettres de cette langue', 'Starte Arachne neu für die Schrift dieser Sprache', 'Перезапустите Arachne для букв этого языка', 'Поново покрените Arachne за слова овог језика', 'Herbegin Arachne vir hierdie taal se letters', "Ka'a káajs Arachne utia'al u woojil le t'aana'", 'Fang Arachne nei aa fer die Schprooch ihre Buchschtawe'],
+'%d colours, %d shapes, %d curves, %.0f KB, in %.2f s': ['%d 色、%d 図形、%d 曲線、%.0f KB、%.2f 秒', '%d 种颜色,%d 个形状,%d 条曲线,%.0f KB,用时 %.2f 秒', '%d colores, %d formas, %d curvas, %.0f KB, en %.2f s', '%d색, %d개 도형, %d개 곡선, %.0f KB, %.2f초', '%d couleurs, %d formes, %d courbes, %.0f Ko, en %.2f s', '%d Farben, %d Formen, %d Kurven, %.0f KB, in %.2f s', '%d цветов, %d фигур, %d кривых, %.0f КБ, за %.2f с', '%d боја, %d облика, %d кривих, %.0f KB, за %.2f s', '%d kleure, %d vorms, %d kurwes, %.0f KB, in %.2f s', "%d boono'ob, %d bix u yilik, %d kóochil, %.0f KB, ti' %.2f s", '%d Farewe, %d Forme, %d Kurve, %.0f KB, in %.2f s'],
+'Drop a picture here, or paint one from words on the left': ['ここに画像をドロップするか、左で言葉から描いてください', '把图片拖到这里,或在左侧用文字绘制', 'Suelta aquí una imagen o píntala con palabras a la izquierda', '여기에 사진을 놓거나 왼쪽에서 글로 그리세요', 'Déposez une image ici, ou peignez-en une avec des mots à gauche', 'Zieh ein Bild hierher oder male eins mit Worten links', 'Перетащите сюда изображение или нарисуйте его по словам слева', 'Превуците слику овде или је насликајте речима лево', "Los 'n prent hier, of verf een met woorde links", "P'at juntúul oochel waye', wa bo'ont juntúul yéetel t'aan ti' u xno'oj", 'Laess en Bild do falle, odder mol eens mit Wadde links'],
+'Arachne traces it into vector art: shapes and curves that stay sharp at any size.': ['Arachne はそれをベクターアートにトレースします。どんなサイズでも鮮明な図形と曲線です。', 'Arachne 会把它描摹成矢量图:任何尺寸都清晰的形状和曲线。', 'Arachne la convierte en arte vectorial: formas y curvas nítidas a cualquier tamaño.', 'Arachne가 벡터 아트로 트레이스합니다: 어떤 크기에서도 선명한 도형과 곡선.', "Arachne la vectorise : des formes et des courbes nettes à toute taille.", 'Arachne macht daraus Vektorgrafik: Formen und Kurven, die in jeder Größe scharf bleiben.', 'Arachne превращает его в векторную графику: фигуры и кривые, чёткие в любом размере.', 'Arachne га претвара у векторску графику: облике и криве оштре у свакој величини.', 'Arachne trek dit na as vektorkuns: vorms en kurwes wat by enige grootte skerp bly.', "Arachne ku ts'íibtik bey vector: bix u yilik yéetel kóochil ma' tu k'astal mix bik'in.", 'Arachne molt es ab als Vektorbild: Forme un Kurve, wu in alle Greese scharf bleiwe.'],
+'Ready to trace. To paint from words, Arachne needs Krea 2 Turbo (Firmament\'s models)': ['トレースの準備完了。言葉から描くには Krea 2 Turbo(Firmament のモデル)が必要です', '可以描摹。要用文字绘制,Arachne 需要 Krea 2 Turbo(Firmament 的模型)', 'Listo para vectorizar. Para pintar con palabras, Arachne necesita Krea 2 Turbo (los modelos de Firmament)', '트레이스 준비됨. 글로 그리려면 Krea 2 Turbo(Firmament의 모델)가 필요합니다', 'Prêt à vectoriser. Pour peindre avec des mots, Arachne a besoin de Krea 2 Turbo (les modèles de Firmament)', 'Bereit zum Vektorisieren. Zum Malen mit Worten braucht Arachne Krea 2 Turbo (die Modelle von Firmament)', 'Готово к трассировке. Чтобы рисовать по словам, нужен Krea 2 Turbo (модели Firmament)', 'Спремно за векторизацију. За сликање речима потребан је Krea 2 Turbo (модели из Firmament-а)', 'Gereed om na te trek. Om met woorde te verf, het Arachne Krea 2 Turbo nodig (Firmament se modelle)', "Líista u ts'íibta'al. Utia'al u bo'onta'al yéetel t'aan, Arachne u k'áat Krea 2 Turbo", 'Faddich fer abzumole. Fer mit Wadde zu mole, brauch Arachne Krea 2 Turbo (em Firmament sei Modelle)'],
+'Flat illustration': ['フラットイラスト', '扁平插画', 'Ilustración plana', '플랫 일러스트', 'Illustration plate', 'Flache Illustration', 'Плоская иллюстрация', 'Равна илустрација', 'Plat illustrasie', "Ts'íib cháak", 'Flach Bild'],
+'Logo': ['ロゴ', '标志', 'Logotipo', '로고', 'Logo', 'Logo', 'Логотип', 'Лого', 'Logo', 'Logo', 'Logo'],
+'Line art': ['線画', '线稿', 'Dibujo lineal', '라인 아트', 'Dessin au trait', 'Strichzeichnung', 'Линейный рисунок', 'Цртеж линијама', 'Lyntekening', "Ts'íib xóot'", 'Strichbild'],
+'Sticker': ['ステッカー', '贴纸', 'Pegatina', '스티커', 'Autocollant', 'Sticker', 'Наклейка', 'Налепница', 'Plakker', "Ch'a'ab", 'Klewer'],
+'Icon': ['アイコン', '图标', 'Icono', '아이콘', 'Icône', 'Symbol', 'Значок', 'Иконица', 'Ikoon', "Chan oochel", 'Bildel'],
+}
+here = os.path.dirname(os.path.abspath(__file__))
+names = dict(ja='日本語', zh='中文', es='Español', ko='한국어', fr='Français', de='Deutsch', ru='Русский', sr='Српски', af='Afrikaans', yua="Maaya t'aan", pdc='Deitsch')
+for i, code in enumerate(CODES):
+    with open(os.path.join(here, code + '.txt'), 'w', encoding='utf-8', newline='\n') as f:
+        f.write('# Arachne: %s (made by make_packs.py; English = translation, a line each)\n' % names[code])
+        for en, tr in T.items():
+            f.write('%s = %s\n' % (en, tr[i]))
+print('wrote', len(CODES), 'packs,', len(T), 'lines each')

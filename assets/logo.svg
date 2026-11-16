@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Arachne: a web spun of Bezier curves; one thread is a curve being drawn, with its handles -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#23262e"/><stop offset="1" stop-color="#15171c"/></linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34a9e3"/><stop offset="0.5" stop-color="#007bb7"/><stop offset="1" stop-color="#34a9e3"/></linearGradient>
+  </defs>
+  <rect x="10" y="10" width="492" height="492" rx="96" fill="url(#bg)" stroke="url(#rim)" stroke-width="12"/>
+  <g fill="none" stroke="#c8ccd6" stroke-linecap="round">
+    <!-- spokes -->
+    <g stroke-width="5" opacity="0.85">
+      <line x1="256" y1="256" x2="256" y2="58"/><line x1="256" y1="256" x2="410" y2="104"/><line x1="256" y1="256" x2="458" y2="262"/>
+      <line x1="256" y1="256" x2="404" y2="412"/><line x1="256" y1="256" x2="250" y2="460"/><line x1="256" y1="256" x2="96" y2="414"/>
+      <line x1="256" y1="256" x2="54" y2="250"/><line x1="256" y1="256" x2="104" y2="98"/>
+    </g>
+    <!-- rings: each thread sags towards the centre between two spokes -->
+    <g stroke-width="5">
+      <path d="M256 102 Q300 140 365 147 Q366 210 410 260 Q362 300 360 362 Q296 364 252 410 Q214 362 150 360 Q148 298 102 252 Q146 214 148 146 Q212 142 256 102"/>
+      <path d="M256 150 Q284 176 331 180 Q332 222 360 259 Q330 286 328 329 Q286 330 254 360 Q228 330 184 328 Q182 288 152 254 Q180 228 182 180 Q226 178 256 150"/>
+      <path d="M256 196 Q270 210 298 214 Q298 236 312 257 Q298 272 296 296 Q274 298 255 312 Q240 296 216 296 Q214 274 200 256 Q214 238 216 214 Q240 212 256 196"/>
+    </g>
+  </g>
+  <!-- the outer ring's thread on the right, drawn as a curve with its handles (Atelier blue) -->
+  <path d="M365 147 Q366 210 410 260" fill="none" stroke="#34a9e3" stroke-width="12" stroke-linecap="round"/>
+  <g stroke="#34a9e3" stroke-width="3"><line x1="365" y1="147" x2="366" y2="210"/><line x1="366" y1="210" x2="410" y2="260"/></g>
+  <rect x="353" y="135" width="24" height="24" fill="#34a9e3"/>
+  <rect x="398" y="248" width="24" height="24" fill="#34a9e3"/>
+  <circle cx="366" cy="210" r="13" fill="#007bb7" stroke="#e6f6ff" stroke-width="3"/>
+  <!-- the spider: small, at the centre -->
+  <circle cx="256" cy="256" r="16" fill="#e6e6e6"/>
+</svg>
