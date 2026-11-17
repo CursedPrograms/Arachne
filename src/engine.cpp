@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <cstdlib>
 #include <filesystem>
 #include <mutex>
 #include <random>
@@ -27,7 +28,8 @@ static std::string exeDir() { char* b = SDL_GetBasePath(); std::string s = b ? b
 
 Models findModels() {
     Models m; std::error_code ec;
-    const std::vector<fs::path> roots = {fs::path("F:/AIModels"), fs::u8path(exeDir()) / "models"};
+    std::vector<fs::path> roots = {fs::u8path(exeDir()) / "models", fs::path("F:/AIModels")};
+    if (const char* la = std::getenv("LOCALAPPDATA")) roots.push_back(fs::u8path(la) / "Programs" / "Firmament" / "models");   // Firmament's: one download for both
     auto find = [&](const char* sub, std::initializer_list<const char*> files) {
         for (const auto& r : roots) for (const char* f : files) for (const fs::path& p : {r / sub / f, r / f}) if (fs::exists(p, ec)) return p.u8string();
         return (roots.back() / sub / *files.begin()).u8string();

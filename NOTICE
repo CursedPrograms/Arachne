@@ -1,0 +1,15 @@
+Arachne
+Copyright (c) 2026 Cursed Entertainment. MIT license: see LICENSE.
+
+Built into Arachne:
+- stable-diffusion.cpp (MIT), https://github.com/leejet/stable-diffusion.cpp, and ggml (MIT), https://github.com/ggml-org/ggml:
+  painting from words (stable-diffusion.dll, delay-loaded).
+- NVIDIA CUDA runtime libraries (cudart, cuBLAS), shipped beside it under NVIDIA's CUDA EULA (redistributable files).
+- SDL2 (zlib), https://www.libsdl.org
+- Dear ImGui (MIT), https://github.com/ocornut/imgui
+- stb_image, stb_image_write, stb_truetype (MIT / public domain), https://github.com/nothings/stb
+- nanosvg and nanosvgrast (zlib), https://github.com/memononen/nanosvg: drawing SVGs back (the PNG, the check)
+- Microsoft Visual C++ runtime (redistributable files, beside stable-diffusion.dll)
+
+Not shipped: the Krea 2 Turbo models (diffusion model, Qwen3-VL text encoder, VAE). They are fetched by Firmament or
+placed by you, under their own licences.

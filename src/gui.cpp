@@ -266,7 +266,7 @@ static void openPicture(const std::string& path) {
 static void paint() {
     std::string why;
     if (!Engine::available(why)) { say(T(why.c_str())); return; }
-    if (!models.missing().empty()) { say(T("The painting models aren't on this PC (Firmament's Krea 2 Turbo: F:\\AIModels\\krea2 or models\\ beside Arachne)")); return; }
+    if (!models.missing().empty()) { say(T("Painting needs Krea 2 Turbo: get it in Firmament (its Models tab: Arachne finds it there), or put it in the models folder beside Arachne")); return; }
     if (!prompt[0]) { say(T("Describe the picture first")); return; }
     Engine::Settings s; s.prompt = promptFor(style, prompt); s.width = s.height = paintSize; s.steps = paintSteps;
     s.seed = sameSeed ? lastSeed : -1;

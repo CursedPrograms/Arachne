@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arachne - pictures into clean vector art</title>
+  <meta name="description" content="Arachne: pictures into clean SVG vector art on your own PC, in C++: flat shapes, smooth Bezier curves, no gaps. Or paint a picture from words first (Krea 2 Turbo) and trace it. Part of Atelier.">
+  <link rel="icon" href="site/favicon.ico">
+  <link rel="stylesheet" href="site/style.css">
+</head>
+
+<body>
+  <header class="top">
+    <img class="logo" src="site/logo.png" alt="Arachne">
+    <div>
+      <h1>Arachne</h1>
+      <p class="tag">Pictures into clean vector art, or painted from words and then traced. Part of
+        <a href="https://github.com/CursedPrograms/Atelier">Atelier</a>.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="shot">
+      <img src="images/window.jpg" alt="Arachne: a fox under a crescent moon, painted from words and traced into 10 colours and 861 curves">
+    </section>
+
+    <section class="actions">
+      <a class="btn" href="https://github.com/CursedPrograms/Arachne/releases">Download</a>
+      <a class="btn quiet" href="https://github.com/CursedPrograms/Arachne">Get it on GitHub</a>
+    </section>
+
+    <section class="grid" id="features"></section>
+
+    <section class="keys">
+      <h2>The command line</h2>
+      <p><kbd>arachne-cli picture.png picture.svg</kbd> traces it. Add <kbd>--colours 12</kbd>, <kbd>--speckle 16</kbd>,
+        <kbd>--corner 100</kbd>, <kbd>--drop-background</kbd>, <kbd>--outlines</kbd> or <kbd>--render check.png</kbd>
+        (the SVG drawn back, and how close it is).</p>
+    </section>
+    <section class="keys" id="requirements">
+      <h2>Minimum requirements</h2>
+      <table class="reqs">
+        <tr><th>System</th><td>Windows 10 or 11, 64-bit (the tracer, arachne-cli, also builds on Linux)</td></tr>
+        <tr><th>Processor</th><td>any 64-bit processor (tracing runs on the CPU: a fraction of a second a picture)</td></tr>
+        <tr><th>Memory</th><td>4 GB RAM to trace; 16 GB to paint from words (the models sit in memory)</td></tr>
+        <tr><th>Graphics</th><td>any graphics card with OpenGL 3.0 to trace; painting from words needs an NVIDIA card with 6 GB or more (CUDA)</td></tr>
+        <tr><th>Disk</th><td>600 MB for the app; painting also needs Krea 2 Turbo, about 13 GB (Firmament's models: one download for both)</td></tr>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>stable-diffusion.cpp and ggml (MIT), SDL2 (zlib), Dear ImGui (MIT), stb, nanosvg (zlib).</p>
+    <p>&copy; <a href="https://cursed-entertainment.itch.io/">Cursed Entertainment</a> <span id="year">2026</span></p>
+  </footer>
+  <script src="site/site.js"></script>
+</body>
+
+</html>
